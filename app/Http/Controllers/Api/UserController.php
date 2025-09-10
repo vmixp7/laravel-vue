@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -14,7 +15,12 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::all();
+        $users = User::where('status', 1)->get();
+        $arr = [];
+        foreach ($users as $user) {
+            $arr[] = $user->username;
+        }
+        return $arr;
     }
 
     /**
@@ -25,7 +31,16 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        return User::create($request->only(['username', 'email', 'password']));
+        try {
+            $request->validate([
+                'username' => 'required|string|max:2',
+                'email' => 'required|string|email|max:255|unique:users',
+                'password' => 'required|string|min:6',
+            ]);
+            return User::create($request->only(['username', 'email', 'password']));
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 422);
+        }
     }
 
     /**
@@ -36,7 +51,16 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        return User::findOrFail($id);
+        // $all = User::findOrFail($id);
+        $user = User::find(1);
+
+        // 取得關聯的訂單
+        $orders = $user->orders;
+
+        // 直接取訂單號碼
+        // $orderNumber = $user->order->order_number;
+
+        return $orders;
     }
 
     /**
