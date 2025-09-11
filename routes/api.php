@@ -19,3 +19,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::apiResource('users', UserController::class);
+Route::get('redis/set', [UserController::class, 'setRedis']);
+Route::get('redis/get', [UserController::class, 'getRedis']);

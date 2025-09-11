@@ -5,6 +5,8 @@ use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Cache;
 
 class UserController extends Controller
 {
@@ -13,6 +15,22 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function setRedis()
+    {
+        // 設定 key
+        Redis::set('user:1', '七哥');
+        // 取得 key
+        $value = Redis::get('user:1');
+        // dd($value); // "七哥"
+        // 設定 60 秒過期
+        Redis::setex('temp:key', 60, 'hello');
+        return $value;
+    }
+    public function getRedis()
+    {
+        $name = Redis::get('user:1');
+        return $name;
+    }
     public function index()
     {
         $users = User::where('status', 1)->get();
