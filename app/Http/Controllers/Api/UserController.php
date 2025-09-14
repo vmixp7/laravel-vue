@@ -33,12 +33,14 @@ class UserController extends Controller
     }
     public function index()
     {
-        $users = User::where('status', 1)->get();
-        $arr = [];
-        foreach ($users as $user) {
-            $arr[] = $user->username;
-        }
-        return $arr;
+        // $users = User::where('status', 1)->get();
+        // $arr = [];
+        // foreach ($users as $user) {
+        //     $arr[] = $user->username;
+        // }
+        // return $arr;
+        $datas = User::select('email','username')->has('orders', '>', 3)->get();
+        return $datas;
     }
 
     /**
@@ -51,7 +53,7 @@ class UserController extends Controller
     {
         try {
             $request->validate([
-                'username' => 'required|string|max:2',
+                'username' => 'required|string|max:10',
                 'email' => 'required|string|email|max:255|unique:users',
                 'password' => 'required|string|min:6',
             ]);

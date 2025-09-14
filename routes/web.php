@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\SeckillController;
+use App\Http\Controllers\TestController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,3 +19,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::resource('homes', HomeController::class);
+Route::get('/seckill/buy', [SeckillController::class, 'buy']);
+Route::get('/test/revers/{id}', [TestController::class, 'revers']);
+Route::get('/test/lockForUpdate/{id}', [TestController::class, 'lockForUpdate']);
